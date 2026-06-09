@@ -1,6 +1,12 @@
 #!/bin/bash
 set -e
 
+if ! command -v apt &> /dev/null; then
+  echo ">>> Этот скрипт работает только на Debian/Ubuntu (apt)."
+  echo ">>> Для macOS смотри ручную установку в README.md"
+  exit 1
+fi
+
 REPO="https://github.com/duppyyy66/nvim-config.git"
 
 echo ">>> Устанавливаем Neovim конфиг..."
@@ -34,13 +40,10 @@ sudo apt install -y ripgrep
 nvim --headless "+Lazy sync" +qa 2>/dev/null
 
 # Добавить алиас 
-SHELL_RC="$HOME/.bashrc"
-[ -f "$HOME/.zshrc" ] && SHELL_RC="$HOME/.zshrc"
-
-if ! grep -q "alias vi='nvim'" "$SHELL_RC"; then
-  echo "alias vi='nvim'" >> "$SHELL_RC"
-  echo ">>> Добавлен alias vi=nvim в $SHELL_RC"
-  source $SHELL_RC
+if ! grep -q "alias vi='nvim'" "$HOME/.bashrc"; then
+  echo "alias vi='nvim'" >> "$HOME/.bashrc"
+  echo ">>> Добавлен alias vi=nvim в .bashrc"
+  source "$HOME/.bashrc"
 fi
 
 echo ">>> Готово! Запусти nvim"
