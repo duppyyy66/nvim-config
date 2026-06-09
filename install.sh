@@ -1,7 +1,7 @@
 #!/bin/bash
 set -e
 
-REPO="git@github.com:duppyyy66/nvim-config.git"
+REPO="https://github.com/duppyyy66/nvim-config.git"
 
 echo ">>> Устанавливаем Neovim конфиг..."
 
