@@ -23,7 +23,6 @@ return {
     config = function()
       require("mason-lspconfig").setup({
         ensure_installed = {
-          "clangd",   -- C / C++
           "jdtls",    -- Java
           "bashls",   -- Bash
           "lua_ls",   -- Lua
@@ -80,13 +79,6 @@ return {
           end, "Форматировать файл")
         end,
       })
-
-      -- ── C / C++ ───────────────────────────────────────────
-      vim.lsp.config("clangd", {
-        capabilities = capabilities,
-        cmd = { "clangd", "--background-index", "--clang-tidy" },
-      })
-      vim.lsp.enable("clangd")
 
       -- ── Bash ──────────────────────────────────────────────
       vim.lsp.config("bashls", {
