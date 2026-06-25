@@ -1,10 +1,10 @@
 # nvim-config
 
-Конфигурация Neovim для разработки на Java / Spring Boot, C/C++ и Bash.
+Конфигурация Neovim для разработки на Java / Spring Boot и Bash.
 
 ## Возможности
 
-- **LSP** — автокомплит, переход к определению, рефакторинг для Java, C/C++, Bash, Lua
+- **LSP** — автокомплит, переход к определению, рефакторинг для Java, Bash, Lua
 - **Java / Spring Boot** — полная поддержка через `nvim-jdtls`: генерация классов, организация импортов, запуск тестов, Spring Boot расширения
 - **Treesitter** — продвинутая подсветка синтаксиса
 - **Telescope** — fuzzy-поиск файлов и grep по проекту
@@ -19,7 +19,6 @@
 |---|---|---|
 | Neovim | 0.10+ | основа |
 | Node.js + npm | LTS | bashls, tree-sitter-cli |
-| clangd | любая | LSP для C/C++ |
 | ripgrep | любая | grep в Telescope |
 | SDKMAN + JDK | 17 или 21 | Java LSP (jdtls) |
 | Nerd Font | любая | иконки в терминале |
