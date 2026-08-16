@@ -26,6 +26,7 @@ return {
           "jdtls",    -- Java
           "bashls",   -- Bash
           "lua_ls",   -- Lua
+          "gopls",    -- Go
         },
         automatic_installation = true,
       })
@@ -99,6 +100,19 @@ return {
       })
       vim.lsp.enable("lua_ls")
 
+      -- ── Go ────────────────────────────────────────────────
+      vim.lsp.config("gopls", {
+        capabilities = capabilities,
+        settings = {
+          gopls = {
+            analyses    = { unusedparams = true },
+            staticcheck = true,
+            gofumpt     = true,
+          },
+        },
+      })
+      vim.lsp.enable("gopls")
+
     end,
   },
 
@@ -118,15 +132,12 @@ return {
         config_dir = jdtls_path .. "/config_mac"
       end
 
-      -- Уникальный workspace для каждого проекта
       local project_name = vim.fn.fnamemodify(vim.fn.getcwd(), ":p:h:t")
       local workspace    = vim.fn.expand("~/.cache/jdtls/workspace/") .. project_name
 
-      -- JDK из SDKMAN
       local sdkman_java = vim.fn.expand("~/.sdkman/candidates/java/current/bin/java")
       local java_bin    = vim.fn.executable(sdkman_java) == 1 and sdkman_java or "java"
 
-      -- Spring Boot Tools bundles
       local spring_ext = mason_data .. "/packages/spring-boot-tools/extension"
       local bundles    = {}
       for _, jar in ipairs(vim.fn.glob(spring_ext .. "/**/jars/*.jar", true, true)) do
@@ -156,13 +167,13 @@ return {
         capabilities = capabilities,
         settings = {
           java = {
-            eclipse    = { downloadSources = true },
-            maven      = { downloadSources = true },
-            references = { includeDecompiledSources = true },
-            inlayHints = { parameterNames = { enabled = "all" } },
-            format     = { enabled = true },
+            eclipse     = { downloadSources = true },
+            maven       = { downloadSources = true },
+            references  = { includeDecompiledSources = true },
+            inlayHints  = { parameterNames = { enabled = "all" } },
+            format      = { enabled = true },
             saveActions = { organizeImports = true },
-            completion = {
+            completion  = {
               favoriteStaticMembers = {
                 "org.junit.Assert.*",
                 "org.junit.jupiter.api.Assertions.*",
@@ -176,20 +187,15 @@ return {
           bundles = bundles,
         },
         on_attach = function(_, bufnr)
-          -- Стандартные горячие клавиши уже назначены через LspAttach выше
-          -- Дополнительные Java-специфичные биндинги:
           local map = function(keys, func, desc)
             vim.keymap.set("n", keys, func, { buffer = bufnr, desc = "Java: " .. desc })
           end
-          -- Рефакторинг
-          map("<leader>jo", jdtls.organize_imports,                     "Организовать импорты")
-          map("<leader>jv", jdtls.extract_variable,                     "Извлечь переменную")
-          map("<leader>jm", jdtls.extract_method,                       "Извлечь метод")
-          map("<leader>jc", jdtls.extract_constant,                     "Извлечь константу")
-          -- Тесты
-          map("<leader>jt", jdtls.test_nearest_method,                  "Запустить ближайший тест")
-          map("<leader>jT", jdtls.test_class,                           "Запустить все тесты класса")
-          -- Визуальный режим — извлечение
+          map("<leader>jo", jdtls.organize_imports,   "Организовать импорты")
+          map("<leader>jv", jdtls.extract_variable,   "Извлечь переменную")
+          map("<leader>jm", jdtls.extract_method,     "Извлечь метод")
+          map("<leader>jc", jdtls.extract_constant,   "Извлечь константу")
+          map("<leader>jt", jdtls.test_nearest_method,"Запустить ближайший тест")
+          map("<leader>jT", jdtls.test_class,         "Запустить все тесты класса")
           vim.keymap.set("v", "<leader>jv", function() jdtls.extract_variable(true) end,
             { buffer = bufnr, desc = "Java: Извлечь переменную (выделение)" })
           vim.keymap.set("v", "<leader>jm", function() jdtls.extract_method(true) end,
@@ -197,10 +203,8 @@ return {
         end,
       }
 
-      -- Запустить jdtls
       jdtls.start_or_attach(config)
 
-      -- Перезапускать при смене проекта
       vim.api.nvim_create_autocmd("BufEnter", {
         pattern  = "*.java",
         callback = function()
